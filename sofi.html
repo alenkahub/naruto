@@ -1,0 +1,1171 @@
+  <!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Софи Фудзинака</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember:    #ff4e1a;
+    --flame:    #ff8c42;
+    --gold:     #ffd166;
+    --ash:      #1a1410;
+    --char:     #221b15;
+    --smoke:    #2e2318;
+    --mist:     #3d2f22;
+    --paper:    #f5ede0;
+    --cream:    #ede0cc;
+    --red-hair: #d63031;
+    --white-hair:#f8f0e8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ash);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── FIRE PARTICLES ── */
+  #particles-canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 0 60px;
+    position: relative;
+  }
+
+  .clan-emblem {
+    width: 110px; height: 110px;
+    margin-bottom: 28px;
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%,100% { filter: drop-shadow(0 0 12px #ff4e1a88); }
+    50%      { filter: drop-shadow(0 0 28px #ff4e1acc); }
+  }
+
+  .hero-subtitle {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--flame);
+    margin-bottom: 14px;
+    opacity: 0;
+    animation: fade-up 0.8s 0.2s forwards;
+  }
+
+  .hero-name {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(40px, 8vw, 72px);
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--white-hair) 0%, var(--flame) 45%, var(--red-hair) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    animation: fade-up 0.9s 0.4s forwards;
+  }
+
+  .hero-kanji {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    color: rgba(255,140,66,0.6);
+    letter-spacing: 0.2em;
+    margin-top: 8px;
+    opacity: 0;
+    animation: fade-up 0.9s 0.6s forwards;
+  }
+
+  .hero-divider {
+    width: 180px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--flame), transparent);
+    margin: 28px auto;
+    opacity: 0;
+    animation: fade-up 0.8s 0.8s forwards;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fade-up 0.8s 1s forwards;
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hero-stat-val {
+    font-family: 'Cinzel', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .hero-stat-lbl {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: rgba(255,140,66,0.7);
+    text-transform: uppercase;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    opacity: 0;
+    animation: fade-in 1s 2s forwards;
+  }
+
+  .scroll-hint span {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: rgba(255,140,66,0.45);
+    text-transform: uppercase;
+  }
+
+  .scroll-arrow {
+    width: 1px; height: 40px;
+    background: linear-gradient(180deg, var(--flame), transparent);
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-pulse { 0%,100% { opacity:0.3; } 50% { opacity:1; } }
+
+  /* ── SECTIONS ── */
+  .section {
+    margin-top: 72px;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .section.visible { opacity: 1; transform: translateY(0); }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .section-num {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ember);
+    letter-spacing: 0.1em;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--cream);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,140,66,0.4), transparent);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: linear-gradient(135deg, rgba(46,35,24,0.8), rgba(34,27,21,0.9));
+    border: 1px solid rgba(255,140,66,0.12);
+    border-radius: 4px;
+    padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--ember), var(--flame), transparent);
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    top: -1px; left: 0;
+    width: 40%; height: 1px;
+    background: linear-gradient(90deg, var(--ember), transparent);
+  }
+
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  @media (max-width: 620px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ── INFO BLOCK ── */
+  .info-item {
+    background: rgba(255,140,66,0.04);
+    border: 1px solid rgba(255,140,66,0.08);
+    border-radius: 3px;
+    padding: 16px 18px;
+    position: relative;
+  }
+
+  .info-label {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 5px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .info-label::before {
+    content: '▸';
+    font-size: 8px;
+  }
+
+  .info-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--cream);
+    font-weight: 400;
+  }
+
+  /* ── TRAIT TAGS ── */
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+  .tag {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    padding: 4px 12px;
+    border-radius: 2px;
+    border: 1px solid rgba(255,140,66,0.25);
+    background: rgba(255,78,26,0.07);
+    color: var(--flame);
+  }
+
+  /* ── BIOGRAPHY ── */
+  .bio-text {
+    font-size: 17px;
+    line-height: 1.9;
+    color: rgba(237,224,204,0.9);
+  }
+
+  .bio-text p + p { margin-top: 16px; }
+
+  .dropcap::first-letter {
+    font-family: 'Cinzel', serif;
+    font-size: 3.2em;
+    font-weight: 900;
+    float: left;
+    line-height: 0.75;
+    margin: 6px 10px 0 0;
+    color: var(--ember);
+    text-shadow: 0 0 20px rgba(255,78,26,0.5);
+  }
+
+  /* ── TECHNIQUES ── */
+  .technique-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .technique {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: rgba(255,140,66,0.04);
+    border: 1px solid rgba(255,140,66,0.08);
+    border-radius: 3px;
+    transition: background 0.25s, border-color 0.25s;
+  }
+
+  .technique:hover {
+    background: rgba(255,140,66,0.09);
+    border-color: rgba(255,140,66,0.22);
+  }
+
+  .technique-rank {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 600;
+    width: 26px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .rank-D { color: #8a9b7a; }
+  .rank-C { color: #8ab4d4; }
+  .rank-B { color: #a57fd4; }
+  .rank-A { color: #d4a547; }
+  .rank-S { color: #ff4e1a; text-shadow: 0 0 8px rgba(255,78,26,0.6); }
+
+  .technique-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--cream);
+    flex: 1;
+  }
+
+  .technique-type {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    padding: 3px 8px;
+    border-radius: 2px;
+    border: 1px solid rgba(255,140,66,0.2);
+    color: rgba(255,140,66,0.6);
+  }
+
+  /* ── STATS BARS ── */
+  .stat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+
+  .stat-name {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(237,224,204,0.65);
+    width: 120px;
+    flex-shrink: 0;
+  }
+
+  .stat-bar-wrap {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,140,66,0.1);
+    border-radius: 2px;
+    overflow: visible;
+    position: relative;
+  }
+
+  .stat-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--ember), var(--flame));
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+  }
+
+  .stat-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 6px var(--flame);
+  }
+
+  .stat-val {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    color: var(--flame);
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ── SPECIALIZATION BADGE ── */
+  .spec-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(255,78,26,0.12), rgba(255,140,66,0.06));
+    border: 1px solid rgba(255,78,26,0.3);
+    border-radius: 3px;
+    margin-top: 14px;
+  }
+
+  .spec-icon { font-size: 18px; }
+
+  .spec-text {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--flame);
+  }
+
+  /* ── QUOTE ── */
+  .quote-block {
+    margin: 50px 0;
+    padding: 32px 40px;
+    border-left: 2px solid var(--ember);
+    background: linear-gradient(90deg, rgba(255,78,26,0.06), transparent);
+    border-radius: 0 4px 4px 0;
+    font-style: italic;
+    font-size: 20px;
+    color: rgba(237,224,204,0.8);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+
+  .quote-block.visible { opacity: 1; transform: translateY(0); }
+
+  .quote-source {
+    display: block;
+    margin-top: 10px;
+    font-style: normal;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ember);
+  }
+
+  /* ── CLAN SECTION ── */
+  .clan-banner {
+    background: linear-gradient(135deg, rgba(46,35,24,0.9), rgba(34,27,21,0.95));
+    border: 1px solid rgba(255,140,66,0.15);
+    border-radius: 4px;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .clan-emblem-sm {
+    width: 80px; height: 80px;
+    opacity: 0.85;
+  }
+
+  .clan-title {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+
+  .clan-sub {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ember);
+    margin-bottom: 12px;
+  }
+
+  .clan-desc {
+    font-size: 15px;
+    color: rgba(237,224,204,0.75);
+    line-height: 1.8;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,140,66,0.1);
+    text-align: center;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: rgba(255,140,66,0.3);
+    text-transform: uppercase;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--ash); }
+  ::-webkit-scrollbar-thumb { background: var(--ember); border-radius: 2px; }
+
+  /* ── MISC ── */
+  .highlight { color: var(--flame); }
+  .muted { color: rgba(237,224,204,0.5); font-size: 14px; }
+  .mt-4 { margin-top: 4px; }
+  .mt-12 { margin-top: 12px; }
+  .mt-16 { margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+
+<div class="page">
+
+  <!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════ -->
+  <section class="hero">
+    <svg class="clan-emblem" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="55" cy="55" r="50" stroke="#ff4e1a" stroke-width="1" opacity="0.3"/>
+      <circle cx="55" cy="55" r="42" stroke="#ff8c42" stroke-width="0.5" opacity="0.4"/>
+      <!-- Phoenix wings -->
+      <path d="M55 28 C38 38 22 50 28 62 C34 52 44 48 55 52 C66 48 76 52 82 62 C88 50 72 38 55 28Z" fill="url(#wing-grad)" opacity="0.85"/>
+      <!-- Tail feathers -->
+      <path d="M55 52 L48 80 L55 72 L62 80 Z" fill="url(#tail-grad)" opacity="0.7"/>
+      <!-- Head -->
+      <circle cx="55" cy="40" r="8" fill="url(#head-grad)" opacity="0.9"/>
+      <!-- Eye -->
+      <circle cx="55" cy="40" r="2.5" fill="#ffd166"/>
+      <!-- Feather details -->
+      <path d="M28 62 C20 68 16 78 22 84" stroke="#ff4e1a" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+      <path d="M82 62 C90 68 94 78 88 84" stroke="#ff4e1a" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+      <defs>
+        <linearGradient id="wing-grad" x1="22" y1="28" x2="88" y2="62" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ff4e1a"/>
+          <stop offset="100%" stop-color="#ffd166"/>
+        </linearGradient>
+        <linearGradient id="tail-grad" x1="55" y1="52" x2="55" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ff8c42"/>
+          <stop offset="100%" stop-color="#ff4e1a" stop-opacity="0.3"/>
+        </linearGradient>
+        <radialGradient id="head-grad" cx="55" cy="40" r="8" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffd166"/>
+          <stop offset="100%" stop-color="#ff4e1a"/>
+        </radialGradient>
+      </defs>
+    </svg>
+
+    <div class="hero-subtitle">Анкета Шиноби · Клан Фудзинака · Конохагакуре</div>
+    <h1 class="hero-name">Софи Фудзинака</h1>
+    <div class="hero-kanji">藤中 ソフィ</div>
+    <div class="hero-divider"></div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-val">12</span>
+        <span class="hero-stat-lbl">лет</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-val">150</span>
+        <span class="hero-stat-lbl">см</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-val">36</span>
+        <span class="hero-stat-lbl">кг</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-val">Генин</span>
+        <span class="hero-stat-lbl">ранг</span>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ ЛИЧНОСТЬ ═══════════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Личность персонажа</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="grid-2">
+        <div class="info-item">
+          <div class="info-label">Полное имя</div>
+          <div class="info-value">Такоцубо Софи</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Возраст</div>
+          <div class="info-value">13 лет</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Рост / Вес</div>
+          <div class="info-value">150 см · 36 кг</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Ориентация</div>
+          <div class="info-value">Когда будет пара — тогда и впишу...</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Деревня</div>
+          <div class="info-value">Конохагакуре</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Клан</div>
+          <div class="info-value">Фудзинака <span class="muted">藤中</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-16">
+      <div class="info-label">Характер</div>
+      <div class="bio-text mt-4">Про неё можно сказать так, что в целом - она ядерная смесь энергии и позитива, что делает её душой любой компании, которой такой ураган нужен.
+        <div class=""></div> Она дружелюбна, общительна, постоянно наблюдает за всем, что находится около неё и не терпит несправедливости в чьей-либо адрес, хоть и иногда сделать с этим ничего не может, но как-либо свой протест она выразит. Она обожает шутки и смех, но сама шутить не умеет, поэтому и той нравятся люди, которые умеют хорошо шутить, и.. понятно.   
+      </div>
+      <div class="tags mt-12">
+        <span class="tag">Энергичная</span>
+        <span class="tag">Дружелюбная</span>
+        <span class="tag">Хатико</span>
+      </div>
+    </div>
+
+    <div class="grid-2 mt-16" style="gap:16px">
+      <div class="card">
+        <div class="info-label">Путь ниндзя / Цель</div>
+        <div class="bio-text mt-4" style="font-size:15px">Понять, в чём же он.</div>
+      </div>
+      <div class="card">
+        <div class="info-label">Привычки</div>
+        <div class="bio-text mt-4" style="font-size:15px">Часто покусывает нижнюю губу в стрессовых ситуациях, может закручивать, трогать постоянно волосы, когда нервничает.</div>
+      </div>
+      <div class="card">
+        <div class="info-label">Любит / не любит</div>
+        <div class="bio-text mt-4" style="font-size:15px">Любит тишину, отдых, танцы, разговаривать с людьми, быть на природе, иногда - наедине, гладить животных, делать что-то, что откликается в её душе, путешествовать. Не нравится той сидеть на месте, делать какую-либо рутину, не нравится кушать в забегаловках.</div>
+      </div>
+      <div class="card">
+        <div class="info-label">Любимая еда</div>
+        <div class="bio-text mt-4" style="font-size:15px">Панкейки.</div>
+      </div>
+      <div class="card">
+        <div class="info-label">Любимая локация</div>
+        <div class="bio-text mt-4" style="font-size:15px">Какой-нибудь лес.</div>
+      </div>
+      <div class="card">
+        <div class="info-label">Любимое оружие / техника</div>
+        <div class="bio-text mt-4" style="font-size:15px">Ручки.</div>
+      </div>
+    </div>
+
+    <div class="card mt-16">
+      <div class="info-label">Фобии и страхи</div>
+      <div class="bio-text mt-4" style="font-size:15px">Может показаться, что девочка ничего не боится, но на самом деле это не так. Она безумно боится предательства от близких людей и делает всё для того, чтобы располагать их, любые подарки, одолжения, очень часто злоупотребляет собой таким же образом, поскольку у той никого особо и нет. И.. клаустрофобка. Не может держаться в узких закрытых пространствах. Плохо чувствует себя в изоляции от людей.</div>
+    </div>
+
+    <div class="card mt-16">
+      <div class="info-label">Члены семьи и их статус</div>
+      <div class="bio-text mt-4" style="font-size:15px">Неизвестно.</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ БИОГРАФИЯ ════════════════════════════════ -->
+  <div class="quote-block section">
+    «Словно Феникс, рождённый в пламени хаоса — каждый из клана Фудзинака несёт в себе огонь
+    тех лет, когда один человек встал между деревней и тьмой.»
+    <span class="quote-source">— летопись клана Фудзинака, 730 год</span>
+  </div>
+
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Биография</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="bio-text dropcap">
+        <p>Девочка была просто девочкой, очередной девочкой родившейся на свет. Как обычно бывает подобное как и в жизни, так и здесь - 
+          безымянная корзиночка с чем-то маленьким, укутанным в простыньку с запиской: "Софи". Это "маленькое" создание - и была она, и проверив её на взрывные печати, ловушки - приняли на воспитание. 
+          Детство девочка помнит очень смутно. Она помнит то ругательства воспитателей на неё за её характер, то - мелкие похвалы за её общительность, но надо было дать и клан той, дабы у неё не было проблем в жизни. 
+          Софи нарекли как "Такоцубо", числившаяся в списке кланов, которые вполне пригодны для использования, так и значения особо не имели: лишь для того, чтобы дети были в сохранности, да и в целом дабы их никто не нашёл. 
+          Происхождения своего клана она не знала, объясняли ей это в детстве так, что родители её предпочли отдать девочку по личным причинам. 
+        </p>
+        <p>Этот приют был на окраине Страны Огня, который содержали несколько отставных шиноби и гражданских, не имевших своих семей. Фамилия "Такоцубо" значилась в архивах Конохи как малый клан, давно утративший свою кровную линию и используемый исключительно как контейнер для сирот - формальная печать, чтобы у ребёнка не было статуса "Никто". При этом ни боевых техник, никакой силы за этим кланом не стояло.
+          В детстве она была обычной девочкой, хотя уж, совсем необычной. Её характер делал с ней очень плохие вещи: она лазала по деревьям, жгла траву , была достаточно непослушной и очень проказной. Однажды, когда девочка играла в ниндзя, та сложила пальцы в печать, и из её ладошки вырвался маленький огонёк, который опалил, и очернил кусты крапивы. Спрашивая о том, откуда девочка об этом впоследствии знает - она сама отвечала, что вообще не знает, что произошло, и просто сделала, что сделала, однако воспитатели после этого каждый божий день промывали ей мозги о том, что она будет хорошей куноичи.
+        Мико, воспитательница проверила чакру девочки. Она явно горела огнём, была яркой, горячей, с достаточно пугающей для маленькой девочки интенсивностью. Но, всё же за ней постоянно следили и ругали, поскольку она может ненароком сжечь дом, и будучи не глупой - она конечно же, это понимала и осознавала.
+        </p>
+        <p>
+          Без учителей и наставников она обучилась базовым движениям, просто подглядывая за тренировками отдали. Она старалась повторять их движения, и дабы не повредить свою кожу - аккуратненько оттачила удары сначала на воздухе, а потом на каких-нибудь веточках. И.. чувствовала, что у неё по какой-то причине это получается намного лучше, чем любое умение в её жизни, и со временем же, к этим движениям начал добавляться маленький огонёк, дающий лишь тепло, поскольку та не рисковала создавать что-то более масштабное и опасное. Это очень-очень отдалённо напоминало боевой стиль, но не являлось таковым, со временем она присмотрела одного из мальчиков-генинов, который усердно тренировался, и спарринговалась с ним. Он конечно же, постоянно её побеждал, что ту бесило, и она старалась хоть как-то выдумывать на месте, импровизировать, дабы противопоставить что-нибудь юноше. 
+       Так появляется уникальный стиль девочки, местами сильнее, местами слабее, однако в тайдзюцу она постоянно старается приближаться, быть в очень близкой к оппоненту, так у неё гораздо лучше получается рисковать собой, и иногда - выигрывать, иногда и проигрывать. Она постоянно ставит себя в риск ради подобного.
+       Она называла это всё "трюками", и мало кому показывала подобное. 
+      </p>
+      <p>
+        В десять лет она узнала, что оказывается, можно поступить в академию, и её опекуны поддержали кандидатуру, поскольку если она поступит туда - то, мало того, что освободится ещё местечко для потеряшек-детей, так ещё и она сможет зарабатывать сама себе на жизнь, и хотя-бы оплачивать жильё. Для неё это был шанс вырваться из сироты, и стать хотя-бы кем-то. Она подала заявление, однако указала, что вообще ничегошеньки не знает кроме того, как давать отпор своими ручками. Она была приглашена на факультативы, где её обучили базе: контроль чакры, базовым печатям, технике хождения по деревьям и всему тому, что обычно необходимо дабы противопоставлять сопротивление врагам. В академию она поступила в 771 году в 11 лет.
+       У неё не было ни одной выученной техники кроме базовых: превращение, и прочее, хотя при этом та игралась с огнём в тайдзюцу, обволакивала свой кулачок жаром, причем не пламенем - а именно жаром, который обжигал при касании. Примитивный аналог кастета пламени, но без названия и какого-то ранга. Она просто.. делала, что у неё больше всего получалось, и игралась со своей пламенной чакрой так, как ей удобно. Естественно она не знала, что этим техникам тысячи лет, но кровь и гены делают своё дело. Она думала, что ей просто повезло с её типом чакры.
+      </p>
+      <p>
+        Оказывается, что ей приходилось выбирать специализацию. Девочка любила быть в самом пылу, в каком-либо риске, и поскольку она будет самой ближайшей к врагам - ей будет гораздо проще использовать свой конёк. Та начала замечать в какую сторону дует ветер, постоянно думать о том, кто и где какие оставляет следы, однако не слишком придавала этому значение, а больше - тому, как она общается с людьми и умеет вытягивать из них информацию. Это у девочки явно больше получалось, чем быть следопытом. Разрабатывая свои техники - она даже не называла их какими-либо именами, и просто делала то, что делала, выполняя свои естественнные движения в своём танце. Инструктора по тактике сразу заметили, что девочка уж слишком опасна в ближнем бою, и очень слаба в дальнем бою, что практически не может ничего сделать, и поддержали выбор её как разведчицу. В феврале 773 года сожгли больницу. Софи отнеслась отстранённо к этому событию, но то, что мир опасен - она понимала крепче всего, она знала, что полагаться лучше именно на себя. Девочка сдала выпускные экзамены, и теперь - она генин. И первые задания девочки уже близко, как и то, что теперь она живёт отдельно. На месяц для неё сняли комнатку, которую в последствии она будет оплачивать сама.
+      </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════ ТЕХНИКИ ═════════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Техники</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="muted mt-12" style="margin-bottom:14px">
+      Техники
+    </div>
+
+    <div class="technique-list">
+      <div class="technique">
+        <span class="technique-rank rank-D">D</span>
+        <span class="technique-name">Техника Подмены Тела</span>
+        <span class="technique-type">Ниндзюцу</span>
+      </div>
+      <div class="technique">
+        <span class="technique-rank rank-D">D</span>
+        <span class="technique-name">Техника Превращения</span>
+        <span class="technique-type">Ниндзюцу</span>
+      </div>
+      <div class="technique">
+        <span class="technique-rank rank-D">D</span>
+        <span class="technique-name">Техника простого Клонирования</span>
+        <span class="technique-type">Ниндзюцу</span>
+      </div>
+      <div class="technique">
+        <span class="technique-rank rank-D">D</span>
+        <span class="technique-name">Техника ходьбы по деревьям / стенам</span>
+        <span class="technique-type">Ниндзюцу</span>
+      </div>
+      <div class="technique">
+        <span class="technique-rank rank-D">D</span>
+        <span class="technique-name">Техника плаща-невидимки</span>
+        <span class="technique-type">Академия</span>
+      </div>
+      <div class="technique">
+        <span class="technique-rank rank-D">D</span>
+        <span class="technique-name">Техника освобождения от гендзюцу</span>
+        <span class="technique-type">Академия</span>
+      </div>
+      <div class="technique">
+        <span class="technique-rank rank-D">D</span>
+        <span class="technique-name">Техника снятия печати</span>
+        <span class="technique-type">Академия</span>
+      </div>
+      <!-- Clan techniques -->
+      <div class="technique">
+        <span class="technique-rank rank-D">D</span>
+        <span class="technique-name">Стихия огня: Кастет пламени</span>
+        <span class="technique-type">Клановая</span>
+      </div>
+      <div class="technique">
+        <span class="technique-rank rank-D">D</span>
+        <span class="technique-name">Стихия огня: Пылающий выпад</span>
+        <span class="technique-type">Клановая</span>
+      </div>
+      <div class="technique">
+        <span class="technique-rank rank-C">C</span>
+        <span class="technique-name">5 взлетов Феникса</span>
+        <span class="technique-type">Стартовая</span>
+      </div>
+      <div class="technique">
+        <span class="technique-rank rank-C">C</span>
+        <span class="technique-name">Стихия Огня: Вспышка</span>
+        <span class="technique-type">Стартовая</span>
+      </div>
+      <div class="technique">
+        <span class="technique-rank rank-D">D</span>
+        <span class="technique-name">Искусство Ниндзя: Лунная Красота</span>
+        <span class="technique-type">Стартовая</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════ ПАРАМЕТРЫ ══════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Параметры и дзюцу</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="info-label" style="margin-bottom:18px">Основные параметры</div>
+        <div class="stat-row">
+          <span class="stat-name">Физическая сила</span>
+          <div class="stat-bar-wrap"><div class="stat-bar-fill" data-val="40"></div></div>
+          <span class="stat-val">40</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-name">Скорость движений</span>
+          <div class="stat-bar-wrap"><div class="stat-bar-fill" data-val="70"></div></div>
+          <span class="stat-val">70</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-name">Выносливость</span>
+          <div class="stat-bar-wrap"><div class="stat-bar-fill" data-val="60"></div></div>
+          <span class="stat-val">60</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-name">Прочность</span>
+          <div class="stat-bar-wrap"><div class="stat-bar-fill" data-val="10"></div></div>
+          <span class="stat-val">10</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-name">Запас чакры</span>
+          <div class="stat-bar-wrap"><div class="stat-bar-fill" data-val="40"></div></div>
+          <span class="stat-val">40</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-name">Контроль чакры</span>
+          <div class="stat-bar-wrap"><div class="stat-bar-fill" data-val="40"></div></div>
+          <span class="stat-val">40</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="info-label" style="margin-bottom:16px">Предрасположенности</div>
+        <div class="info-item" style="margin-bottom:10px">
+          <div class="info-label">К дзюцу</div>
+          <div class="tags mt-4">
+            <span class="tag">Тайдзюцу</span>
+            <span class="tag">Ниндзюцу</span>
+            <span class="tag">Сюрикендзюцу</span>
+          </div>
+        </div>
+        <div class="info-item" style="margin-bottom:16px">
+          <div class="info-label">Не предрасположена</div>
+          <div class="tags mt-4">
+            <span class="tag" style="border-color:rgba(214,48,49,0.3);color:rgba(214,48,49,0.7)">Мидзюцу, Барьеры, Сенсорика.</span>
+          </div>
+        </div>
+
+        <div class="info-label" style="margin-bottom:10px">Стихия</div>
+        <div class="info-item" style="margin-bottom:16px">
+          <div class="tags">
+            <span class="tag">Огонь 火</span>
+          </div>
+        </div>
+
+        <div class="info-label" style="margin-bottom:8px">Специализация</div>
+        <div class="spec-badge">
+          <span class="spec-icon">🔥</span>
+          <span class="spec-text">Разведчица</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ КЛАН ════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Клан Фудзинака</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="clan-banner">
+      <svg class="clan-emblem-sm" viewBox="0 0 80 80" fill="none">
+        <circle cx="40" cy="40" r="36" stroke="#ff4e1a" stroke-width="0.8" opacity="0.4"/>
+        <path d="M40 14 C28 24 18 34 22 44 C27 36 34 32 40 36 C46 32 53 36 58 44 C62 34 52 24 40 14Z" fill="url(#wg2)" opacity="0.9"/>
+        <path d="M40 36 L35 58 L40 52 L45 58 Z" fill="url(#tg2)" opacity="0.6"/>
+        <circle cx="40" cy="28" r="6" fill="url(#hg2)"/>
+        <circle cx="40" cy="28" r="2" fill="#ffd166"/>
+        <defs>
+          <linearGradient id="wg2" x1="18" y1="14" x2="62" y2="44" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ff4e1a"/>
+            <stop offset="100%" stop-color="#ffd166"/>
+          </linearGradient>
+          <linearGradient id="tg2" x1="40" y1="36" x2="40" y2="58" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ff8c42"/>
+            <stop offset="100%" stop-color="#ff4e1a" stop-opacity="0.2"/>
+          </linearGradient>
+          <radialGradient id="hg2" cx="40" cy="28" r="6" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ffd166"/>
+            <stop offset="100%" stop-color="#ff4e1a"/>
+          </radialGradient>
+        </defs>
+      </svg>
+      <div>
+        <div class="clan-title">Фудзинака <span class="muted">藤中氏</span></div>
+        <div class="clan-sub">Основан ок. 726 г. · Деревня Токугакура · Страна Огня</div>
+        <div class="clan-desc">
+          Клан известен способностью сочетать техники огня с тайдзюцу — боевой стиль «Пылающий
+          Феникс», унаследованный от основателя Рё Фудзинаки. Отличительная черта — бело-красные
+          волосы и повышенная жаростойкость, с детства развиваемая ежедневными тренировками.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3 mt-16">
+      <div class="card" style="padding:20px">
+        <div class="info-label">Боевой стиль</div>
+        <div class="info-value mt-4" style="font-size:15px">Смесь пылающего Феникса с уникальным стилем Софи.</div>
+      </div>
+      <div class="card" style="padding:20px">
+        <div class="info-label">Основные дзюцу</div>
+        <div class="info-value mt-4" style="font-size:15px">Тайдзюцу · Нинздзюцу Огня</div>
+      </div>
+      <div class="card" style="padding:20px">
+        <div class="info-label">Особенность клана</div>
+        <div class="info-value mt-4" style="font-size:15px">Жаростойкость тела</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ ИМУЩЕСТВО ═══════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Снаряжение и имущество</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="grid-2">
+        <div class="info-item">
+          <div class="info-label">Основная одежда</div>
+          <div class="bio-text mt-4" style="font-size:15px">Часто ходит в чёрном лонгсливе, на низ предпочитает юбки с гетрами, либо штаны какие-нибудь, шорты.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Вооружение / снаряжение</div>
+          <div class="bio-text mt-4" style="font-size:15px">Подсумочек с несколькими кунаями, сюрикенами, дымовой шашкой и маленьким острым осколком стекла.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Жилище</div>
+          <div class="bio-text mt-4" style="font-size:15px">Съемная комнатка на месяц, а дальше будет думать где жить.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Необычное имущество дома</div>
+          <div class="bio-text mt-4" style="font-size:15px">Не имеется.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Финансы при себе</div>
+          <div class="bio-text mt-4" style="font-size:15px">500 рё.</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Финансы в банке / дома</div>
+          <div class="bio-text mt-4" style="font-size:15px">5200 рё.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <!-- ═══════════════════════════════════ ВНЕШНОСТЬ ═══════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Внешность</h2>
+      <div class="section-line"></div>
+    </div>
+    
+    <!-- Картинка внешности -->
+    <img src="https://allwebs.ru/images/2026/05/28/a219b6f325134c7ca28a7b5d64b566fd.png" alt="Внешность персонажа" class="appearance-img" loading="lazy">
+  </section>
+
+  <!-- ════════════════════════════════ ПРИОРИТЕТЫ ПРОКАЧКИ ════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2 class="section-title">Приоритеты прокачки</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="muted" style="margin-bottom:18px">Значения от 0 до 5 · Лимит: 3×пятёрки, 7×четвёрки, 12×тройки, 14×двойки</div>
+      <div id="skills-grid"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ FOOTER ═══════════════════════════════════ -->
+  <footer class="footer">
+    <div>Клан Фудзинака · 藤中氏 · Конохагакуре · 773 год</div>
+    <div style="margin-top:6px"></div>
+  </footer>
+
+</div>
+
+<script>
+// ── PARTICLES ──────────────────────────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function Particle() {
+    this.reset();
+  }
+
+  Particle.prototype.reset = function() {
+    this.x    = Math.random() * W;
+    this.y    = H + Math.random() * 80;
+    this.vx   = (Math.random() - 0.5) * 0.6;
+    this.vy   = -(0.5 + Math.random() * 1.4);
+    this.size = 1 + Math.random() * 3;
+    this.life = 0;
+    this.maxLife = 120 + Math.random() * 180;
+    this.hue = 10 + Math.random() * 30;
+  };
+
+  Particle.prototype.update = function() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life++;
+    if (this.life > this.maxLife || this.y < -20) this.reset();
+  };
+
+  Particle.prototype.draw = function() {
+    const alpha = Math.sin((this.life / this.maxLife) * Math.PI) * 0.7;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = `hsl(${this.hue}, 90%, 60%)`;
+    ctx.shadowBlur = 6;
+    ctx.shadowColor = `hsl(${this.hue}, 90%, 60%)`;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * (1 - this.life / this.maxLife * 0.6), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  };
+
+  for (let i = 0; i < 55; i++) particles.push(new Particle());
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(loop);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  loop();
+})();
+
+// ── INTERSECTION OBSERVER (scroll reveal) ─────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.section, .quote-block').forEach(el => observer.observe(el));
+
+// ── STAT BAR ANIMATION ────────────────────────────────────────────────────────
+const barObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.stat-bar-fill').forEach(bar => {
+        const val = bar.dataset.val || 0;
+        setTimeout(() => { bar.style.width = val + '%'; }, 200);
+      });
+      barObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.section').forEach(el => barObserver.observe(el));
+
+// ── SKILLS GRID (static, read-only) ───────────────────────────────────────────
+const skills = [
+  ['Точные науки', 2],
+  ['Теория мысли', 2],
+  ['Формулы мира шиноби', 3],
+  ['Первая помощь', 1],
+  ['Человеческая анатомия', 4],
+  ['Изготовление лекарств', 0],
+  ['Отработка ниндзюцу', 2],
+  ['Спарринги с применением чакры', 3],
+  ['Обращение с чакрой', 4],
+  ['Искусство маскировки', 3],
+  ['Акробатика', 4],
+  ['Преодоление препятствий', 2],
+  ['Тяжёлая атлетика', 3],
+  ['Укрепление души и тела', 2],
+  ['Практика ближних контактов', 3],
+  ['Клинковое оружие', 3],
+  ['Базовое снаряжение шиноби', 4],
+  ['Погружение в кендзюцу', 2],
+  ['Отработка кат', 4],
+  ['Спарринги', 5],
+  ['Летальные удары', 4],
+  ['Общая физическая подготовка', 4],
+  ['Лёгкая атлетика', 4],
+  ['Углубление в суть чакры', 3],
+  ['Глубокие медитации', 2],
+  ['Поиск опасностей', 3],
+  ['Развитие способностей сенсора', 0],
+  ['Мастерство иллюзий', 0],
+  ['Теория пыток', 0],
+  ['Теория барьеров', 0],
+  ['Методы ограждения и подавления', 2],
+  ['Развитие мелкой моторики рук', 3],
+  ['Практика сюрикендзюцу', 3],
+  ['Спарринги вслепую', 5],
+  ['Развитие навыка поиска информации', 3],
+  ['Развитие навыка выживания в дикой природе', 3],
+  ['Клановые тренировки', 5],
+];
+
+const dotColors = ['rgba(255,140,66,0.15)','#5a9','#5a9','#d4a547','#d47530','#ff4e1a'];
+const dotActiveColors = ['rgba(255,140,66,0.15)','#72c9a2','#72c9a2','#ffd166','#ff8c42','#ff4e1a'];
+
+const grid = document.getElementById('skills-grid');
+grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px';
+
+skills.forEach(([name, val]) => {
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:rgba(255,140,66,0.04);border:1px solid rgba(255,140,66,0.08);border-radius:3px;gap:10px';
+
+  const dots = Array.from({length:5}, (_,i) => {
+    const filled = i < val;
+    const color = filled ? dotActiveColors[val] : 'rgba(255,140,66,0.1)';
+    const glow  = filled && val === 5 ? `box-shadow:0 0 5px ${dotActiveColors[val]};` : '';
+    return `<span style="width:9px;height:9px;border-radius:50%;background:${color};display:inline-block;${glow}flex-shrink:0"></span>`;
+  }).join('');
+
+  const numColor = val === 5 ? '#ff4e1a' : val === 4 ? '#ff8c42' : val === 0 ? 'rgba(255,140,66,0.25)' : '#ffd166';
+
+  row.innerHTML = `
+    <span style="font-family:'Noto Sans JP',sans-serif;font-size:10px;color:rgba(237,224,204,0.65);flex:1;line-height:1.4">${name}</span>
+    <span style="display:flex;align-items:center;gap:4px">${dots}</span>
+    <span style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:${numColor};width:16px;text-align:right;flex-shrink:0">${val}</span>`;
+  grid.appendChild(row);
+});
+</script>
+</body>
+</html>
